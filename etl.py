@@ -42,7 +42,7 @@ def process_log_file(cur, filepath):
     t = df.ts
     
     # insert time data records
-    time_data = (t.dt.time, t.dt.hour, t.dt.day, t.dt.weekofyear, t.dt.month, t.dt.year, t.dt.weekday)
+    time_data = (t, t.dt.hour, t.dt.day, t.dt.weekofyear, t.dt.month, t.dt.year, t.dt.weekday)
     column_labels = ("timestamp", "hour", "day", "week_of_year", "month","year", "weekday")
     time_df = pd.DataFrame(dict(zip(column_labels, time_data)))
 
@@ -60,7 +60,7 @@ def process_log_file(cur, filepath):
     for index, row in df.iterrows():
         
         # get songid and artistid from song and artist tables
-        cur.execute(song_select, (row.song, row.artist, row.length))
+        cur.execute(song_select, (row.artist, row.song, row.length))
         results = cur.fetchone()
         
         if results:
@@ -107,7 +107,7 @@ def main():
     - connect to sparkify database
     - process all files and performs all inserts into five tables
     """
-    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=username password=password")
+    conn = psycopg2.connect("host=127.0.0.1 dbname=sparkifydb user=student password=student")
     cur = conn.cursor()
 
     process_data(cur, conn, filepath='data/song_data', func=process_song_file)
